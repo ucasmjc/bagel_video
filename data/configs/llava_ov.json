@@ -1,0 +1,11 @@
+{
+    "datasets":[["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/cambrian(filtered)/uni_cambrian(filtered).json",  "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/cambrian(filtered)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/chart2text(cauldron)/uni_chart2text(cauldron).json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/chart2text(cauldron)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/chartqa(cauldron,llava_format)/uni_chartqa(cauldron,llava_format).json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/chartqa(cauldron,llava_format)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/dvqa(cauldron,llava_format)/uni_dvqa(cauldron,llava_format).json"  ,  "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/dvqa(cauldron,llava_format)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/sharegpt4o/uni_sharegpt4o.json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/sharegpt4o"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/scienceqa(cauldron,llava_format)/uni_scienceqa(cauldron,llava_format).json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/scienceqa(cauldron,llava_format)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/image_textualization(filtered)/uni_image_textualization(filtered).json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/image_textualization(filtered)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/robut_wtq(cauldron,llava_format)/uni_robut_wtq(cauldron,llava_format).json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/robut_wtq(cauldron,llava_format)"],
+    ["/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/screen2words(cauldron)/uni_screen2words(cauldron).json"	, "/mnt/weka/data_hw/image_under/lmms-lab/LLaVA-OneVision-Data/screen2words(cauldron)"]]
+}
