@@ -369,8 +369,8 @@ class VideoVAE(nn.Module):
         super().__init__()
         from cosmos_tokenizer.video_lib import CausalVideoTokenizer
         model_name = "Cosmos-1.0-Tokenizer-CV8x8x8"
-        self.encoder = CausalVideoTokenizer(checkpoint_enc=f'/mnt/localdisk/hongwei/Bagel/Cosmos-Tokenizer/pretrained_ckpts/{model_name}/encoder.jit')
-        self.decoder = CausalVideoTokenizer(checkpoint_dec=f'/mnt/localdisk/hongwei/Bagel/Cosmos-Tokenizer/pretrained_ckpts/{model_name}/decoder.jit')
+        self.encoder = CausalVideoTokenizer(checkpoint_enc=f'pretrained_ckpts/{model_name}/encoder.jit')
+        self.decoder = CausalVideoTokenizer(checkpoint_dec=f'pretrained_ckpts/{model_name}/decoder.jit')
         self.ae_params = AutoEncoderParams(
                 resolution=256,
                 in_channels=3,

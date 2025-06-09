@@ -142,9 +142,9 @@ def main():
         logger = create_logger(training_args.results_dir, dist.get_rank())
         wandb.init(
             project=training_args.wandb_project, 
-            id=f"{training_args.wandb_name}-run{training_args.wandb_runid}", 
+            #id=f"{training_args.wandb_name}-run{training_args.wandb_runid}", 
             name=training_args.wandb_name, 
-            resume=training_args.wandb_resume,
+            #resume=training_args.wandb_resume,
             mode="offline" if training_args.wandb_offline else "online"
         )
         wandb.config.update(training_args,allow_val_change=True)
