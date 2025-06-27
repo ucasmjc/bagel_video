@@ -32,7 +32,7 @@ torchrun \
   --wandb_offline true \
   --ema 0.99 \
   --warmup_steps 0 \
-  --save_every 300 \
+  --save_every 500 \
   --dataset_config_file ./data/configs/byte.yaml \
   --model_path $model_path \
   --checkpoint_dir $ckpt_path \
@@ -40,7 +40,7 @@ torchrun \
   --layer_module Qwen2MoTDecoderLayer \
   --auto_resume True \
   --finetune-from-ema True \
-  --log_every 1 \
+  --log_every 10 \
   --gradient_accumulation_steps 1 \
   --lr_scheduler "cosine" \
   --lr 1e-4 \

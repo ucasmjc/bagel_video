@@ -302,7 +302,7 @@ def main():
         num_shard=training_args.num_shard,
         use_orig_params=use_orig_params
     )
-    ema_model = deepcopy(model)
+    #ema_model = deepcopy(model)
     #model_instance=deepcopy(model).eval()
     finetune_from_ema=False
     # model, ema_model = FSDPCheckpoint.try_load_ckpt(
