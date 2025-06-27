@@ -42,6 +42,7 @@ class DistributedIterableDataset(torch.utils.data.IterableDataset):
             return None
 
         info = torch.utils.data.get_worker_info()
+        print(info)
         if info is None:
             # Single worker: Use all files assigned to the rank
             return self.data_paths_per_rank, 0
@@ -51,6 +52,7 @@ class DistributedIterableDataset(torch.utils.data.IterableDataset):
         start = num_files_per_worker * worker_id
         end = num_files_per_worker * (worker_id + 1)
         data_paths_per_worker = self.data_paths_per_rank[start:end]
+        print(f"Worker {worker_id} has {len(data_paths_per_worker)} files")
 
         return data_paths_per_worker[::-1], worker_id
 

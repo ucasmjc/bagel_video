@@ -1,0 +1,1983 @@
+# seedv2-t2i is a image datasets
+# albatross_1, albatross_2: seems to be outdoor sports related videos (skydiving, ski, bouldering etc)
+# 1 image dataset, 54 video datasets
+# train_data: [ 'seedv2-t2i', '123rf', 'albatross_1', 'albatross_2','budgie_1', 'budgie_2', 'canary_1', 'canary_2', 'condor_1', 'condor_2', 'falcon', 'filmsupply_highres',
+#               'guillemot_1', 'guillemot_2', 'guillemot_3', 'guillemot_4', 'gull_1', 'gull_2', 'harrier_1', 'harrier_2', 'hdvg', 'hornbill_1', 'hornbill_2', 'hummingbird_1', 'hummingbird_2', 
+#               'kingfisher', 'lovebird', 'macaw_1', 'macaw_2', 'movie_1', 'movie_2', 'panda70m', 'partridge_1', 'partridge_2', 'partridge_3', 'partridge_4', 'petrel_1', 'petrel_2', 'pigeon_1', 'pigeon_2', 
+#               'pond5', 'puffin_1', 'puffin_2', 'swallow_1', 'swallow_2', 'vimeo_1', 'vimeo_2', 'vimeo_3', 'vimeo_4', 'warbler_1', 'warbler_2', 'wren_1', 'wren_2'] # 256px Train data path
+# train_data_weights: [13, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1] # Train data weights, image:video = 1:4
+
+# 1 image dataset, 29 video datasets
+train_data: ['seed_i'] # 512px Train data path
+train_data_weights: [1]
+# train_data: ['seedv2-t2i-dump'] # Train data path with dump
+# train_data_weights: [1] # Train data weights, image:video = 1:4
+
+# #### image data ####
+# seedv2-t2i
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/seed_t2i/kexuanyi/data/train_data/pretrained_data/kv/v2.0/pretrained_en/v2.0_data_512_src_data
+
+# #### original video data ####
+# nexdata0
+# hdfs://harunava/home/byte_ailab_us_cvg/user/cma/video_gen/data_pipeline/nexdata/stage4/processing_parquet_out_merged/world_size_1/
+
+# xiaobao
+# hdfs://harunava/home/byte_ailab_us_cvg/user/cma/video_gen/data_pipeline/graydata_xiaobao_video_20241209/final_passed_whole_20241222/world_size_1000
+
+# vulture
+# hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/vulture
+
+# 123rf
+# /mnt/bn/icvg/video_gen/captions/123rf_res/123rf_data_res.json
+
+# hdvg
+# hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/base-stage-2/hdvg/v1/data/
+
+# pond5
+# /mnt/bn/icvg/video_gen/captions/pond5_res/pond5_data_res.json
+
+# panda70m
+# hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/base-stage-2/panda70m/v1/data/
+
+# #### new video data ####
+# albatross
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/albatross/2024-10-10-05-40-01/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/albatross/2024-10-11-04-44-59/data
+
+# budgie
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/budgie/p2/2024-10-11-04-42-30/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/budgie/p3/2024-10-11-04-43-39/data
+
+# canary
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/canary/2024-10-10-05-40-25/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/canary/2024-10-11-04-44-41/data
+
+# condor
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/condor/2024-10-10-05-41-37/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/condor/2024-10-11-04-45-40/data
+
+# falcon
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/falcon/2024-10-11-04-44-18/data
+
+# filmsupply_highres
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/filmsupply_highres/2024-10-11-04-43-38/data
+
+# guillemot
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p1/2024-10-10-05-40-24/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p1/2024-10-11-04-45-38/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p2/2024-10-10-05-40-36/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p2/2024-10-11-04-45-41/data
+
+# gull
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/gull/2024-10-10-05-39-41/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/gull/2024-10-11-04-43-41/data
+
+# harrier
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/harrier/2024-10-10-05-41-40/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/harrier/2024-10-11-04-45-41/data
+
+# hornbill
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hornbill/2024-10-10-05-40-53/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hornbill/2024-10-11-04-46-51/data
+
+# hummingbird
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hummingbird/2024-10-10-05-39-30/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hummingbird/2024-10-11-04-43-38/data
+
+# kingfisher
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/kingfisher/2024-10-11-04-44-18/data
+
+# lovebird
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/lovebird/2024-10-11-04-44-18/data
+
+# macaw
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/macaw/2024-10-10-05-40-29/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/macaw/2024-10-11-04-43-38/data
+
+# movie
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/movie/2024-10-10-05-40-40/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/movie/2024-10-11-04-44-40/data
+
+# partridge
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p1/2024-10-10-07-14-43/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p1/2024-10-11-04-49-38/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p2/2024-10-10-20-08-27/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p2/2024-10-11-04-47-38/data
+
+# petrel
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/petrel/2024-10-10-05-41-55/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/petrel/2024-10-11-04-45-52/data
+
+# pheasant
+# No data!!!
+
+# pigeon
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/pigeon/2024-10-10-05-40-25/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/pigeon/2024-10-11-04-45-39/data
+
+# puffin
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/puffin/2024-10-10-05-40-41/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/puffin/2024-10-11-04-45-44/data
+
+# swallow
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/swallow/2024-10-10-07-09-33/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/swallow/2024-10-11-04-45-13/data
+
+# vimeo
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/2024-10-10-05-49-07/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/2024-10-11-04-45-19/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/p3/2024-10-10-05-49-53/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/p3/2024-10-11-04-46-50/data
+
+# warbler
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/warbler/2024-10-10-05-40-37/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/warbler/2024-10-11-04-43-41/data
+
+# wren
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/wren/2024-10-10-05-43-46/data
+# hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/wren/2024-10-11-04-46-40/data
+
+data:
+  params:
+    batch_size: 6 # the real batch size
+    image_batch_size: 8 # real image batch size
+    enable_bucket: True
+    dataset_collections: # list all available datasets
+      seedv2-t2i:
+        target: training.dataset_tool.T2IHDFSDataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/seed_t2i/kexuanyi/data/train_data/pretrained_data/kv/v2.0/pretrained_en/v2.0_data_512_src_data"
+        aspect_ratios:
+          "i-256p-3.0": [768, 256]
+          "i-320p-2.4": [768, 320]
+          "i-320p-2.2": [704, 320]
+          "i-384p-2.0": [768, 384]
+          "i-384p-1.67": [640, 384]
+          "i-512p-1.5": [768, 512]
+          "i-448p-1.29": [576, 448]
+          "i-512p-1.0": [512, 512]
+          "i-448p-0.78": [448, 576]
+          "i-512p-0.67": [512, 768]
+          "i-384p-0.6": [384, 640]
+          "i-384p-0.5": [384, 768]
+          "i-320p-0.45": [320, 704]
+          "i-320p-0.42": [320, 768]
+          "i-256p-0.33": [256, 768]
+          # # default buckets
+          # "i-256p-0.33": [256, 768]
+          # "i-320p-0.42": [320, 768]
+          # "i-320p-0.45": [320, 704]
+          # "i-384p-0.6": [384, 640]
+          # "i-448p-0.78": [448, 576]
+          # "i-512p-1.0": [512, 512]
+          # "i-448p-1.29": [576, 448]
+          # "i-384p-1.67": [640, 384]
+          # "i-320p-2.2": [704, 320]
+          # "i-320p-2.4": [768, 320]
+          # "i-256p-3.0": [768, 256]
+          # 256px buckets for image, if use this config, need to set the params.resolution to 256
+          # "i-256p-0.33": [128, 384]
+          # "i-256p-0.4": [128, 320]
+          # "i-256p-0.6": [192, 320]
+          # "i-256p-0.75": [192, 256]
+          # "i-256p-1.0": [256, 256]
+          # "i-256p-1.33": [256, 192]
+          # "i-256p-1.67": [320, 192]
+          # "i-256p-2.5": [320, 128]
+          # "i-256p-3.0": [384, 128]
+        ratio_strategy: closest
+        params:
+          resolution: 512
+          debug: False
+          caption_key: ["english_caption_qwenllm_v1_emb_dict", "english_caption_qwenllm_v2_emb_dict", "qwenllm_v2.0_orig_caption_emb_dict"] # priority to use the first two, and use the original caption with a low probability
+          aspect_ratios:
+            "i-256p-0.33": [256, 768]
+            "i-320p-0.42": [320, 768]
+            "i-320p-0.45": [320, 704]
+            "i-384p-0.6": [384, 640]
+            "i-448p-0.78": [448, 576]
+            "i-512p-1.0": [512, 512]
+            "i-448p-1.29": [576, 448]
+            "i-384p-1.67": [640, 384]
+            "i-320p-2.2": [704, 320]
+            "i-320p-2.4": [768, 320]
+            "i-256p-3.0": [768, 256]
+
+      seedv2-t2i-dump:
+        target: training.dataset_tool.T2IHDFSDataset_dump
+        # path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/seed_t2i/kexuanyi/data/train_data/pretrained_data/kv/v2.0/pretrained_en/v2.0_data_512_src_data_pq_vae_dump_sample"
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/seed_t2i/kexuanyi/data/train_data/pretrained_data/kv/v2.0/pretrained_en/v2.0_data_512_src_data_pq_vae_dump_new"
+        aspect_ratios:
+          "i-256p-3.0": [768, 256]
+          "i-320p-2.4": [768, 320]
+          "i-320p-2.2": [704, 320]
+          "i-384p-2.0": [768, 384]
+          "i-384p-1.67": [640, 384]
+          "i-512p-1.5": [768, 512]
+          "i-448p-1.29": [576, 448]
+          "i-512p-1.0": [512, 512]
+          "i-448p-0.78": [448, 576]
+          "i-512p-0.67": [512, 768]
+          "i-384p-0.6": [384, 640]
+          "i-384p-0.5": [384, 768]
+          "i-320p-0.45": [320, 704]
+          "i-320p-0.42": [320, 768]
+          "i-256p-0.33": [256, 768]
+        ratio_strategy: closest
+        params:
+          resolution: 512
+          debug: False
+          caption_key: ["english_caption_qwenllm_v1_emb_dict", "english_caption_qwenllm_v2_emb_dict", "qwenllm_v2.0_orig_caption_emb_dict"] # priority to use the first two, and use the original caption with a low probability
+          aspect_ratios:
+            "i-256p-0.33": [256, 768]
+            "i-320p-0.42": [320, 768]
+            "i-320p-0.45": [320, 704]
+            "i-384p-0.6": [384, 640]
+            "i-448p-0.78": [448, 576]
+            "i-512p-1.0": [512, 512]
+            "i-448p-1.29": [576, 448]
+            "i-384p-1.67": [640, 384]
+            "i-320p-2.2": [704, 320]
+            "i-320p-2.4": [768, 320]
+            "i-256p-3.0": [768, 256]
+      123rf:
+        target: training.dataset_tool.T2VHDFSDataset
+        path: "/mnt/bn/icvg/video_gen/captions/123rf_res/123rf_data_res.json"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          sample_n_frames: 17
+          sample_stride: 2
+      hdvg:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/base-stage-2/hdvg/v1/data/"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      seed_i:
+        target: dataset.SeedV1Dataset
+        path: "hdfs://haruna/home/byte_data_seed/hdd_ygdt/VGFM/data/packed/dit-1109/dit-1109-stage-1/pgc_high/2024-11-11-02-01-12/data/"
+        aspect_ratios:
+          "256p-1.25": [256, 320]
+          "256p-0.8": [320, 256]
+          # "320p-2.4": [768, 320]
+          # "384p-2.0": [768, 384]
+          # "512p-1.5": [768, 512]
+          # "448p-1.29": [576, 448]
+          # "512p-1.0": [512, 512]
+          # "448p-0.78": [448, 576]
+          # "512p-0.67": [512, 768]
+          # "384p-0.5": [384, 768]
+          # "320p-0.42": [320, 768]
+        ratio_strategy: closest
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      seed_i_1:
+        target: dataset.SeedV1Dataset
+        path: "hdfs://haruna/home/byte_data_seed/hdd_ygdt/VGFM/data/packed/dit-1109/dit-1109-stage-1/production_high/2024-11-11-05-51-02/data/"
+        aspect_ratios:
+          "256p-1.25": [256, 320]
+          "256p-0.8": [320, 256]
+          # "320p-2.4": [768, 320]
+          # "384p-2.0": [768, 384]
+          # "512p-1.5": [768, 512]
+          # "448p-1.29": [576, 448]
+          # "512p-1.0": [512, 512]
+          # "448p-0.78": [448, 576]
+          # "512p-0.67": [512, 768]
+          # "384p-0.5": [384, 768]
+          # "320p-0.42": [320, 768]
+        ratio_strategy: closest
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_1018_short: 0.0    # 禁用
+              recaption_7B_1018_long: 0.5     # 长版权重
+              recaption_7B_1018_merge: 0.5    # 合并版权重
+      seed_i_2:
+        target: dataset.SeedV1Dataset
+        path: "hdfs://haruna/home/byte_data_seed/hdd_ygdt/VGFM/data/packed/dit-1109/dit-1109-stage-1/stockfootage_high/2024-11-11-02-35-23/data/"
+        aspect_ratios:
+          "256p-1.25": [256, 320]
+          "256p-0.8": [320, 256]
+          # "320p-2.4": [768, 320]
+          # "384p-2.0": [768, 384]
+          # "512p-1.5": [768, 512]
+          # "448p-1.29": [576, 448]
+          # "512p-1.0": [512, 512]
+          # "448p-0.78": [448, 576]
+          # "512p-0.67": [512, 768]
+          # "384p-0.5": [384, 768]
+          # "320p-0.42": [320, 768]
+        ratio_strategy: closest
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+
+      panda70m:
+        target: dataset.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/base-stage-2/panda70m/v1/data/"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      pond5:
+        target: training.dataset_tool.T2VHDFSDataset
+        path: "/mnt/bn/icvg/video_gen/captions/pond5_res/pond5_data_res.json"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          sample_n_frames: 17
+          sample_stride: 2
+      xiaobao:
+        target: training.dataset_tool.AIPVideoDataset
+        path: "hdfs://harunava/home/byte_ailab_us_cvg/user/cma/video_gen/data_pipeline/graydata_xiaobao_video_20241209/final_passed_whole_20241222/world_size_1000"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          caption_path: '' # extra caption file, used for seed dataset
+          caption_key: 'caption_short' # the key stores caption
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          sample_n_frames: 17
+          sample_stride: 2
+          parquet_batch: 128
+          video_toskey: 'clip_toskey'
+          bytes_key: 'bytes'
+          decode_backend: 'pyav' # imageio pyav
+      vulture:
+        target: training.dataset_tool.AIPVideoDataset
+        path: "hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/vulture/v1/data/"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          caption_path: 'hdfs://harunasg/home/byte_data_tt_m/warehouse/content_ecom.db/video_gen/dataset/v2/vulture/vulture_data_res.json'
+          caption_key: 'caption' # the key stores caption
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          sample_n_frames: 17
+          sample_stride: 2
+          parquet_batch: 128
+          video_toskey: ''
+          bytes_key: 'video'
+          decode_backend: 'pyav' # imageio pyav
+      albatross_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/albatross/2024-10-10-05-40-01/data"
+        # old_path: "hdfs://harunasg/home/byte_data_tt_m/VGFM/data/packed/vae-1011/albatross/2024-10-10-05-40-01/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      albatross_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/albatross/2024-10-11-04-44-59/data"
+        # old_path: "hdfs://harunasg/home/byte_data_tt_m/VGFM/data/packed/vae-1011/albatross/2024-10-11-04-44-59/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      budgie_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/budgie/p2/2024-10-11-04-42-30/data"
+        #old_path: "hdfs://harunasg/home/byte_data_tt_m/VGFM/data/packed/vae-1011/budgie/p2/2024-10-11-04-42-30/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      budgie_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/budgie/p3/2024-10-11-04-43-39/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      canary_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/canary/2024-10-10-05-40-25/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      canary_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/canary/2024-10-11-04-44-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      condor_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/condor/2024-10-10-05-41-37/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      condor_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/condor/2024-10-11-04-45-40/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      falcon:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/falcon/2024-10-11-04-44-18/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      filmsupply_highres:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/filmsupply_highres/2024-10-11-04-43-38/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      guillemot_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p1/2024-10-10-05-40-24/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      guillemot_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p1/2024-10-11-04-45-38/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      guillemot_3:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p2/2024-10-10-05-40-36/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      guillemot_4:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/guillemot/p2/2024-10-11-04-45-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      gull_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/gull/2024-10-10-05-39-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      gull_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/gull/2024-10-11-04-43-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      harrier_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/harrier/2024-10-10-05-41-40/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      harrier_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/harrier/2024-10-11-04-45-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      hornbill_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hornbill/2024-10-10-05-40-53/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      hornbill_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hornbill/2024-10-11-04-46-51/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      hummingbird_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hummingbird/2024-10-10-05-39-30/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      hummingbird_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/hummingbird/2024-10-11-04-43-38/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      kingfisher:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/kingfisher/2024-10-11-04-44-18/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      lovebird:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/lovebird/2024-10-11-04-44-18/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      macaw_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/macaw/2024-10-10-05-40-29/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      macaw_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/macaw/2024-10-11-04-43-38/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      movie_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/movie/2024-10-10-05-40-40/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      movie_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/movie/2024-10-11-04-44-40/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      partridge_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p1/2024-10-10-07-14-43/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      partridge_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p1/2024-10-11-04-49-38/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      partridge_3:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p2/2024-10-10-20-08-27/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      partridge_4:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/partridge/p2/2024-10-11-04-47-38/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      petrel_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/petrel/2024-10-10-05-41-55/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      petrel_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/petrel/2024-10-11-04-45-52/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      pigeon_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/pigeon/2024-10-10-05-40-25/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      pigeon_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/pigeon/2024-10-11-04-45-39/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      puffin_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/puffin/2024-10-10-05-40-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      puffin_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/puffin/2024-10-11-04-45-44/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      swallow_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/swallow/2024-10-10-07-09-33/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      swallow_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/swallow/2024-10-11-04-45-13/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      vimeo_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/2024-10-10-05-49-07/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      vimeo_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/2024-10-11-04-45-19/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      vimeo_3:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/p3/2024-10-10-05-49-53/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      vimeo_4:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/vimeo/p3/2024-10-11-04-46-50/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      warbler_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/warbler/2024-10-10-05-40-37/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      warbler_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/warbler/2024-10-11-04-43-41/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      wren_1:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/wren/2024-10-10-05-43-46/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      wren_2:
+        target: training.dataset_tool.SeedV1Dataset
+        path: "hdfs://harunasg/home/byte_icvg_aigc_cp/user/video/temp/19900101/packed/vae-1011/wren/2024-10-11-04-46-40/data"
+        aspect_ratios:
+          "320p-2.4": [768, 320]
+          "384p-2.0": [768, 384]
+          "512p-1.5": [768, 512]
+          "448p-1.29": [576, 448]
+          "512p-1.0": [512, 512]
+          "448p-0.78": [448, 576]
+          "512p-0.67": [512, 768]
+          "384p-0.5": [384, 768]
+          "320p-0.42": [320, 768]
+        ratio_strategy: random
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 17 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'uniform'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0

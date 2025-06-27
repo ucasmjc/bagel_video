@@ -147,10 +147,11 @@ class Bagel(PreTrainedModel):
             packed_timesteps: 1-D float tensor, flow timesteps. 0 indicates use clean image.
             mse_loss_indexes: 1-D bool tensor, where to compute mse loss.
         """
+        print("0000000000003")
         packed_text_embedding = self.language_model.model.embed_tokens(packed_text_ids)
         packed_sequence = packed_text_embedding.new_zeros(size=(sequence_length, self.hidden_size))
         packed_sequence[packed_text_indexes] = packed_text_embedding
-
+        print("0000000000001")
         if nested_attention_masks is None:
             sparse_mask = create_sparse_mask(sample_lens, split_lens, attn_modes, packed_text_embedding.device)
             seqlen = sum(sample_lens)
@@ -161,7 +162,7 @@ class Bagel(PreTrainedModel):
             attention_mask = block_mask
         else:
             attention_mask = nested_attention_masks
-
+        print("000000000002")
         if self.config.visual_und:
             cu_seqlens = torch.nn.functional.pad(torch.cumsum(vit_token_seqlens, dim=0), (1, 0))
             cu_seqlens = cu_seqlens.to(torch.int32)
@@ -180,7 +181,7 @@ class Bagel(PreTrainedModel):
         if self.config.visual_gen:
             p = self.latent_patch_size
             packed_latent = []
-            for latent, (h, w) in zip(padded_latent, patchified_vae_latent_shapes):
+            for latent, (t,h, w) in zip(padded_latent, patchified_vae_latent_shapes):
                 latent = latent[:, :h * p, :w * p].reshape(self.latent_channel, h, p, w, p)
                 latent = torch.einsum("chpwq->hwpqc", latent).reshape(-1, p * p * self.latent_channel)
                 packed_latent.append(latent)
@@ -440,6 +441,7 @@ class Bagel(PreTrainedModel):
                 self.latent_downsample, 
                 max_num_patches_per_side=self.max_latent_size
             )
+            print(vae_posiiton_ids.shape,self.max_latent_size,image_tensor.size)
             packed_vae_position_ids.append(vae_posiiton_ids)
             H, W = image_tensor.shape[1:]
             h = H // self.latent_downsample
@@ -553,7 +555,7 @@ class Bagel(PreTrainedModel):
         packed_key_value_indexes = list()
 
         query_curr = curr = 0
-        for (H, W), curr_kvlen, curr_position_id in zip(image_sizes, curr_kvlens, curr_rope):
+        for (T,H, W), curr_kvlen, curr_position_id in zip(image_sizes, curr_kvlens, curr_rope):
             packed_key_value_indexes.extend(range(curr, curr + curr_kvlen))
             curr += curr_kvlen
 

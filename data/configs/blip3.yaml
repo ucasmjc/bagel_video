@@ -3,14 +3,14 @@ blip3_web:
   dataset_names:
   - long
   - short
-  - sft
+  #- sft
   - journey
   image_transform_args:
     image_stride: 16
-    max_image_size: 384
-    min_image_size: 256
+    max_image_size: 1024
+    min_image_size: 512
   is_mandatory: false
-  weight: 12
+  weight: 1
 ###### T2I 300
 # t2i_pretrain:
 #   dataset_names:

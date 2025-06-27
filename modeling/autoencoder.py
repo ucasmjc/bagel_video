@@ -363,8 +363,8 @@ def load_ae(local_path: str) -> AutoEncoder:
         missing, unexpected = ae.load_state_dict(sd, strict=False, assign=True)
         print_load_warning(missing, unexpected)
     return ae, ae_params
-
-class VideoVAE(nn.Module):
+# from diffusers import AutoencoderKLWan
+class VideoVAE1(nn.Module):
     def __init__(self):
         super().__init__()
         from cosmos_tokenizer.video_lib import CausalVideoTokenizer
@@ -395,3 +395,72 @@ class VideoVAE(nn.Module):
 
     def forward(self, x: Tensor) -> Tensor:
         return self.decode(self.encode(x))
+
+class VideoVAE2(nn.Module):
+    def __init__(self):
+        super().__init__()
+        from diffusers import AutoencoderKLWan
+        self.vae = AutoencoderKLWan.from_pretrained("/mnt/workspace/data/ckpt/vae", torch_dtype=torch.float32)
+        self.ae_params = AutoEncoderParams(
+                resolution=256,
+                in_channels=3,
+                downsample=8,
+                z_channels=16,
+                ch=128,
+                out_ch=3,
+                ch_mult=[1, 2, 4, 4],
+                num_res_blocks=2,
+                scale_factor=0.3611,
+                shift_factor=0.1159,
+        )
+
+    def encode(self, x: Tensor) -> Tensor:
+        z=self.vae.encode(x.unsqueeze(2)).latent_dist.sample().squeeze(2)
+        
+        return z
+
+    def decode(self, z: Tensor) -> Tensor:
+        # import pdb
+        # pdb.set_trace()
+        return self.vae.decode(z.cuda().unsqueeze(2)).squeeze(2)
+
+    def forward(self, x: Tensor) -> Tensor:
+        return self.decode(self.encode(x))
+
+class VideoVAE(nn.Module):
+    def __init__(self):
+        super().__init__()
+        from modeling.vae import WanVAE
+        self.vae = WanVAE(vae_pth="/mnt/data/mjc/Index-anisora/Wan2.1_VAE.pth")
+        self.ae_params = AutoEncoderParams(
+                resolution=256,
+                in_channels=3,
+                downsample=8,
+                z_channels=16,
+                ch=128,
+                out_ch=3,
+                ch_mult=[1, 2, 4, 4],
+                num_res_blocks=2,
+                scale_factor=0.3611,
+                shift_factor=0.1159,
+        )
+
+    def encode(self, x: Tensor) -> Tensor:
+        z=torch.stack(self.vae.encode(x),dim=0).squeeze(2)
+        
+        return z
+
+    def decode(self, z: Tensor) -> Tensor:
+        # import pdb
+        # pdb.set_trace()
+        return torch.stack(self.vae.decode(z.cuda()),dim=0).squeeze(2)
+
+    def forward(self, x: Tensor) -> Tensor:
+        return self.decode(self.encode(x))
+
+if __name__ == "__main__":
+    vae = VideoVAE()
+    x = torch.randn(20, 3, 256, 256).cuda()
+    z = vae.encode(x)
+    print(z.shape)
+    x_recon = vae.decode(z)

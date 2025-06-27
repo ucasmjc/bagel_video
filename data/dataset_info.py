@@ -6,13 +6,15 @@ from .t2i_dataset import T2IIterableDataset
 from .vlm_dataset import SftJSONLIterableDataset
 from .blip3_dataset import WebIterableDataset
 from .t2v_dataset import T2VIterableDataset
-
+from .byte_dataset import CollectionDataset,CollectionDataset_frame
 DATASET_REGISTRY = {
     't2i_pretrain': T2IIterableDataset,
     'vlm_sft': SftJSONLIterableDataset,
     'unified_edit': UnifiedEditIterableDataset,
     'blip3_web': WebIterableDataset,
-    't2v_pretrain':T2VIterableDataset
+    't2v_pretrain':T2VIterableDataset,
+    "byte_data":CollectionDataset,
+    "byte_frame":CollectionDataset_frame
 }
 
 
@@ -67,5 +69,10 @@ DATASET_INFO = {
         'test_data': {
 			'video_dir': '/mnt/localdisk/hongwei/Bagel/data/video_gen.json',
 		},
+    },
+    'byte_data':{
+        'byte_data':{
+            "byte_meta_path":'/mnt/data/mjc/bagel_video/data/byte_data/config.yaml',
+        }
     }
 }

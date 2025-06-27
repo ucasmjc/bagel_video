@@ -9,7 +9,6 @@ from copy import deepcopy
 from dataclasses import dataclass, field
 from time import time
 
-#from diffusers import AutoencoderKLWan
 import sys
 sys.path.append('./')
 import torch
@@ -38,8 +37,7 @@ from train.fsdp_utils import (
     FSDPCheckpoint, FSDPConfig, grad_checkpoint_check_fn, fsdp_wrapper, 
     fsdp_ema_setup, fsdp_ema_update,
 )
-import swanlab
-swanlab.login(api_key="opAGVeUsjTN3PcuSFNif3", save=True)
+
 from inferencer import InterleaveInferencer
 @dataclass
 class ModelArguments:
@@ -98,12 +96,11 @@ class TrainingArguments:
     log_every:                  int = field(default=10)
     save_every:                 int = field(default=2000)
     total_steps:                int = field(default=500_000)
-    gradient_accumulation_steps:int = field(default=1)
 
     warmup_steps:               int = field(default=2000)
     lr_scheduler:               str = field(default="constant")
     lr:                         float = field(default=1e-4)
-    min_lr:                     float = field(default=1e-6)
+    min_lr:                     float = field(default=1e-7)
     beta1:                      float = field(default=0.9)
     beta2:                      float = field(default=0.95)
     eps:                        float = field(default=1e-15)
@@ -143,27 +140,16 @@ def main():
         os.makedirs(training_args.results_dir, exist_ok=True)
         os.makedirs(training_args.checkpoint_dir, exist_ok=True)
         logger = create_logger(training_args.results_dir, dist.get_rank())
-        # wandb.init(
-        #     project=training_args.wandb_project, 
-        #     #id=f"{training_args.wandb_name}-run{training_args.wandb_runid}", 
-        #     name=training_args.wandb_name, 
-        #     #resume=training_args.wandb_resume,
-        #     mode="offline" if training_args.wandb_offline else "online"
-        # )
-        # wandb.config.update(training_args,allow_val_change=True)
-        # wandb.config.update(model_args,allow_val_change=True)
-        # wandb.config.update(data_args,allow_val_change=True)
-        swanlab.init(
-            # 设置项目名
-            project=training_args.wandb_project,
-            experiment_name=training_args.wandb_name,
-            mode="offline"
-            
-            # 设置超参数
+        wandb.init(
+            project=training_args.wandb_project, 
+            #id=f"{training_args.wandb_name}-run{training_args.wandb_runid}", 
+            name=training_args.wandb_name, 
+            #resume=training_args.wandb_resume,
+            mode="offline" if training_args.wandb_offline else "online"
         )
-        swanlab.config.update(training_args,allow_val_change=True)
-        swanlab.config.update(model_args,allow_val_change=True)
-        swanlab.config.update(data_args,allow_val_change=True)
+        wandb.config.update(training_args,allow_val_change=True)
+        wandb.config.update(model_args,allow_val_change=True)
+        wandb.config.update(data_args,allow_val_change=True)
     else:
         logger = create_logger(None, dist.get_rank())
     
@@ -210,7 +196,7 @@ def main():
 
     if training_args.visual_gen:
         if model_args.vae_change:
-            #from cosmos_tokenizer.video_lib import CausalVideoTokenizer
+            from cosmos_tokenizer.video_lib import CausalVideoTokenizer
             vae_model=VideoVAE()
             vae_config=vae_model.ae_params
         else:
@@ -248,13 +234,12 @@ def main():
     if training_args.visual_und:
         model.vit_model.vision_model.embeddings.convert_conv2d_to_linear(vit_config)
 
-    # model_state_dict_path = os.path.join(model_args.model_path, f"ema.safetensors")
-    # model_state_dict=load_file(model_state_dict_path)
-    # model_state_dict.pop('latent_pos_embed.pos_embed')
-    # model_state_dict.pop('vit_pos_embed.pos_embed')
-    # msg = model.load_state_dict(model_state_dict, strict=False)
-    # del model_state_dict
-    # logger.info(msg)
+    model_state_dict_path = os.path.join(model_args.model_path, f"ema.safetensors")
+    model_state_dict=load_file(model_state_dict_path)
+    model_state_dict.pop('latent_pos_embed.pos_embed')
+    model_state_dict.pop('vit_pos_embed.pos_embed')
+    msg = model.load_state_dict(model_state_dict, strict=False)
+    logger.info(msg)
 
     # Setup tokenizer for model:
     
@@ -268,15 +253,10 @@ def main():
         model.language_model.eval()
         for param in model.language_model.parameters():
             param.requires_grad = False
-   # if training_args.freeze_und:
-    else:
+    if training_args.freeze_und:
         for name, param in model.language_model.named_parameters():
             if 'moe_gen' not in name:
                 param.requires_grad = False
-        for name, param in model.named_parameters():        
-            if 'latent_pos_embed' in name:
-                param.requires_grad = True
-    use_orig_params=True
     if training_args.freeze_vit and training_args.visual_und:
         model.vit_model.eval()
         for param in model.vit_model.parameters():
@@ -290,7 +270,7 @@ def main():
                     f.write(f"Parameter name: {name}\n")
                     f.write(f"Requires grad: {param.requires_grad}\n")
                     f.write("-" * 40 + "\n")
-                    #logger.info(name)
+                    logger.info(name)
         print("Parameters have been logged to trainv2_model_parameters.txt")
     
 
@@ -305,32 +285,16 @@ def main():
     )
     ema_model = deepcopy(model)
     #model_instance=deepcopy(model).eval()
-    finetune_from_ema=False
-    # model, ema_model = FSDPCheckpoint.try_load_ckpt(
-    #     resume_from, logger, model, ema_model, resume_from_ema=finetune_from_ema
-    # )
     model, ema_model = FSDPCheckpoint.try_load_ckpt(
-        resume_from, logger, model, None, resume_from_ema=finetune_from_ema
+        resume_from, logger, model, ema_model, resume_from_ema=finetune_from_ema
     )
-    #ema_model = fsdp_ema_setup(ema_model, fsdp_config)
-    # data_status_path = os.path.join(resume_from, "data_status.pt")
-    # if os.path.exists(data_status_path):
-    #     data_status = torch.load(data_status_path, weights_only=True, map_location="cpu")
-    #     local_rank = dist.get_rank()
-    #     if local_rank < len(data_status):
-    #         data_status = data_status[local_rank]
-    #     else:
-    #         data_status = None
-    # else:
-    #     data_status = None
+    ema_model = fsdp_ema_setup(ema_model, fsdp_config)
     # ignored_modules = set()
     # for name, module in model.named_modules():
     #     # 若该模块包含可训练参数，则加入忽略列表
     #     if any(p.requires_grad for p in module.parameters(recurse=False)):
     #         ignored_modules.add(module)
     fsdp_model = fsdp_wrapper(model, fsdp_config)
-    if dist.get_rank() == 0:
-        print(model)
     apply_activation_checkpointing(
         fsdp_model, 
         checkpoint_wrapper_fn=functools.partial(
@@ -413,14 +377,14 @@ def main():
     if training_args.visual_gen:
         vae_model.to(device).eval()
     fsdp_model.train()
-    #ema_model.eval()
+    ema_model.eval()
 
     # train loop
     start_time = time()
     log_loss={"ce":0,"mse":0}
     logger.info(f"Training for {training_args.total_steps} steps, starting at {train_step}...")
     accumulation_steps = training_args.gradient_accumulation_steps
-    for outer_curr_step, data in enumerate(train_loader, start=train_step*2):
+    for outer_curr_step, data in enumerate(train_loader, start=train_step):
         data = data.cuda(device).to_dict()
         data_indexes = data.pop('batch_data_indexes', None)
         ce_loss_weights = data.pop('ce_loss_weights', None)
@@ -428,9 +392,7 @@ def main():
             if training_args.visual_gen:
                 with torch.no_grad():
                     #b*c*h*w
-                    data['padded_latent'] = vae_model.encode(data.pop('padded_images').permute(0,2,1,3,4))#btchw->bcthw
-            if outer_curr_step==0:
-                print(data['padded_latent'].shape,data['packed_timesteps'].mean(),data['padded_latent'].mean(),data["packed_text_ids"].float().mean())
+                    data['padded_latent'] = vae_model.encode(data.pop('padded_images'))
             loss_dict = fsdp_model(**data)
 
         loss = 0
@@ -467,22 +429,15 @@ def main():
         log_loss["mse"]+=loss_dict["mse"]
         loss=loss / accumulation_steps
         loss.backward()
-        curr_step=1
         if (outer_curr_step+1)%accumulation_steps==0:
             total_norm = fsdp_model.clip_grad_norm_(training_args.max_grad_norm)
             
             optimizer.step()
             scheduler.step()
             optimizer.zero_grad()
-            #fsdp_ema_update(ema_model, fsdp_model, decay=training_args.ema)
-
-            curr_step=int(outer_curr_step/accumulation_steps)
-            # logger.info(
-            #     f"(step={curr_step:07d}) curr_step: {curr_step}, log_remainder: {curr_step % training_args.log_every}, save_remainder: {curr_step % training_args.save_every}"
-            # )
-
+            fsdp_ema_update(ema_model, fsdp_model, decay=training_args.ema)
+        curr_step=outer_curr_step/2
         # Log loss values:
-        print(cuur_step)
         if curr_step % training_args.log_every == 0:
             total_samples = torch.tensor(len(data['sample_lens']), device=device)
             dist.all_reduce(total_samples, op=dist.ReduceOp.SUM)
@@ -501,11 +456,9 @@ def main():
                 message += f"Train Loss {key}: {avg_loss:.4f}, "
                 wandb_log[key] = avg_loss
             message += f"Train Steps/Sec: {steps_per_sec:.2f}, "
-            lr=optimizer.param_groups[0]['lr']
-            message += f"learning_rate: {lr:.8f}, "
             logger.info(message)
 
-            wandb_log['lr'] = lr
+            wandb_log['lr'] = optimizer.param_groups[0]['lr']
             wandb_log['total_mse_tokens'] = total_mse_tokens.item()
             wandb_log['total_ce_tokens'] = total_ce_tokens.item()
             wandb_log['total_norm'] = total_norm.item()
@@ -519,8 +472,7 @@ def main():
             wandb_log['mem_cache'] = mem_cache
 
             if dist.get_rank() == 0:
-                #wandb.log(wandb_log, step=curr_step)
-                swanlab.log(wandb_log, step=curr_step)
+                wandb.log(wandb_log, step=curr_step)
             start_time = time()
             log_loss={"ce":0,"mse":0}
 
@@ -542,8 +494,7 @@ def main():
                 ckpt_dir=training_args.checkpoint_dir, 
                 train_steps=curr_step, 
                 model=fsdp_model, 
-                #ema_model=ema_model, 
-                ema_model=None,
+                ema_model=ema_model, 
                 optimizer=optimizer, 
                 scheduler=scheduler, 
                 logger=logger,

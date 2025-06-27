@@ -21,7 +21,7 @@ from torch.nn.attention.flex_attention import flex_attention
 from torch.nn.functional import scaled_dot_product_attention
 from transformers.utils import ModelOutput
 
-from flash_attn import flash_attn_varlen_func
+#from flash_attn import flash_attn_varlen_func
 from modeling.qwen2.modeling_qwen2 import (
     Qwen2Attention, 
     Qwen2MLP, 
@@ -963,6 +963,7 @@ class Qwen2Model(Qwen2PreTrainedModel):
             packed_sequence[packed_und_token_indexes] = packed_sequence[packed_und_token_indexes].detach()
 
         # create position embeddings to be shared across the decoder layers
+        print("111111111111111")
         cos, sin = self.rotary_emb(packed_sequence, packed_position_ids.unsqueeze(0))
         cos = cos.squeeze(0)
         sin = sin.squeeze(0)
@@ -977,6 +978,7 @@ class Qwen2Model(Qwen2PreTrainedModel):
                 packed_und_token_indexes=packed_und_token_indexes,
                 packed_gen_token_indexes=packed_gen_token_indexes,
             )
+        print("2222222222222222")
 
         for decoder_layer in self.layers:
             packed_sequence = decoder_layer(
@@ -986,6 +988,7 @@ class Qwen2Model(Qwen2PreTrainedModel):
                 packed_position_embeddings=packed_position_embeddings,
                 **extra_inputs
             )
+            print(decoder_layer)
 
         if self.use_moe:
             packed_sequence_ = torch.zeros_like(packed_sequence)

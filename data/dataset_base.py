@@ -95,9 +95,10 @@ class PackedDataset(torch.utils.data.IterableDataset):
         datasets = []
         is_mandatory = []
         grouped_weights = []
+        old_meta=datasets_metainfo.copy()
         for grouped_dataset_name, dataset_args in datasets_metainfo.items():
             is_mandatory.append(dataset_args.pop('is_mandatory', False))
-            grouped_weights.append(dataset_args.pop('weight', 0.0))
+            grouped_weights.append(dataset_args.pop('weight', 0.0)) #图片比例
 
             if 'frame_sampler_args' in dataset_args.keys():
                 frame_sampler = FrameSampler(**dataset_args.pop('frame_sampler_args'))
@@ -116,7 +117,27 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 if self.local_rank == 0:
                     print(f'Preparing Dataset {grouped_dataset_name}/{item}')
                 meta_info = DATASET_INFO[grouped_dataset_name][item]
-
+                if "byte_meta_path" in meta_info.keys():
+                    
+                    from omegaconf import OmegaConf
+                    configs = OmegaConf.load(meta_info["byte_meta_path"])
+                    # import pdb
+                    # pdb.set_trace()
+                    dataset_args={"train_data":configs['train_data'],"train_data_weights":configs['train_data_weights']}
+                    dataset_args.update(**configs['data']['params'])
+                    
+                    dataset = DATASET_REGISTRY["byte_frame"][grouped_dataset_name](
+                        dataset_name=grouped_dataset_name,
+                        tokenizer=self.tokenizer,
+                        local_rank=self.local_rank,
+                        world_size=self.world_size,
+                        num_workers=self.num_workers,
+                        data_status=data_status["byte_frame"] if data_status is not None else None,
+                        **dataset_args
+                    )
+                    datasets.append(dataset)
+                    grouped_weights.append(1-grouped_weights[-1])
+                    is_mandatory.append(False)
                 if 'json_dir' in meta_info.keys():
                     # parquet/tar with json
                     if 'json_dir_list' not in dataset_args.keys():
@@ -162,7 +183,6 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 data_status_per_group = data_status[grouped_dataset_name]
             else:
                 data_status_per_group = None
-            
             dataset = DATASET_REGISTRY[grouped_dataset_name](
                 dataset_name=grouped_dataset_name,
                 tokenizer=self.tokenizer,
@@ -232,7 +252,7 @@ class PackedDataset(torch.utils.data.IterableDataset):
             max_image_size = [max(item) for item in list(zip(*image_sizes))]
             padded_images = torch.zeros(size=(len(image_tensors), *max_image_size)) #bs*n*c*h*w
             for i, image_tensor in enumerate(image_tensors):
-                padded_images[i, :, :image_tensor.shape[1], :image_tensor.shape[2]] = image_tensor
+                padded_images[i,:image_tensor.shape[0] ,:, :image_tensor.shape[2], :image_tensor.shape[3]] = image_tensor
 
             data['padded_images'] = padded_images
             data['patchified_vae_latent_shapes'] = sequence_status['vae_latent_shapes']
@@ -264,17 +284,25 @@ class PackedDataset(torch.utils.data.IterableDataset):
         assert total_weights > 0.0
         group_cumprobs = [sum(self.grouped_weights[:i + 1]) / total_weights 
                           for i in range(len(self.grouped_weights))]
+        
         sequence_status = self.set_sequence_status()
         batch_data_indexes = []
 
         buffer = []
-        
+        n = random.random()
+        group_index = 0
+        for i, cumprob in enumerate(group_cumprobs):
+            if n < cumprob:
+                group_index = i
+                break
         while True:
             # Ensure at least one sample from each group
             if sequence_status['curr'] == 0:
-                for group_index, group_iter in enumerate(self.dataset_iters):
-                    if self.is_mandatory[group_index]:
+                # import pdb; pdb.set_trace()
+                for i_group_index, group_iter in enumerate(self.dataset_iters):
+                    if self.is_mandatory[i_group_index]:
                         while True:
+                            
                             sample = next(group_iter)
                             # if a sample is too long, skip it
                             num_tokens = sample['num_tokens'] + 2 * len(sample['sequence_plan'])
@@ -291,12 +319,7 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 sample_from_buffer = True
             else:
                 # sample normally across all groups
-                n = random.random()
-                group_index = 0
-                for i, cumprob in enumerate(group_cumprobs):
-                    if n < cumprob:
-                        group_index = i
-                        break
+                
                 sample = next(self.dataset_iters[group_index])
                 sample_from_buffer = False
 
@@ -310,10 +333,19 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 if len(buffer) < self.max_buffer_size and not sample_from_buffer:
                     buffer.append(sample)
                 else:
-                    print(f"Yielding data with length {sum(sequence_status['sample_lens'])}")
+                    #print(f"Yielding data with length {sum(sequence_status['sample_lens'])}")
                     data = self.to_tensor(sequence_status)
                     data['batch_data_indexes'] = batch_data_indexes
                     yield data
+
+
+                    n = random.random()
+                    group_index = 0
+
+                    for i, cumprob in enumerate(group_cumprobs):
+                        if n < cumprob:
+                            group_index = i
+                            break
                     sequence_status = self.set_sequence_status()
                     batch_data_indexes = []
                 continue
@@ -324,6 +356,12 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 data = self.to_tensor(sequence_status)
                 data['batch_data_indexes'] = batch_data_indexes
                 yield data
+                n = random.random()
+                group_index = 0
+                for i, cumprob in enumerate(group_cumprobs):
+                    if n < cumprob:
+                        group_index = i
+                        break
                 sequence_status = self.set_sequence_status()
                 batch_data_indexes = []
 
@@ -435,17 +473,19 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 sequence_status['vae_image_tensors'].append(image_tensor)
                 sequence_status['packed_latent_position_ids'].append(
                     self.get_flattened_position_ids(
-                        image_tensor.size(1), image_tensor.size(2),
+                        image_tensor.size(1),image_tensor.size(2), image_tensor.size(3),
                         self.data_config.vae_image_downsample, 
                         max_num_patches_per_side=self.data_config.max_latent_size
                     )
                 )
-                H, W = image_tensor.shape[1:]
+                C,T,H, W = image_tensor.shape
                 h = H // self.data_config.vae_image_downsample
                 w = W // self.data_config.vae_image_downsample
-                sequence_status['vae_latent_shapes'].append((h, w))
+                t=(T-1)//4+1
+                sequence_status['vae_latent_shapes'].append((t,h, w))
 
-                num_img_tokens = w * h
+                num_img_tokens = t*w * h
+
                 sequence_status['packed_vae_token_indexes'].extend(range(curr, curr + num_img_tokens))
                 if item['loss'] == 1:
                     sequence_status['mse_loss_indexes'].extend(range(curr, curr + num_img_tokens))
@@ -497,16 +537,16 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 sequence_status['vae_image_tensors'].append(image_tensor)
                 sequence_status['packed_latent_position_ids'].append(
                     self.get_flattened_position_ids(
-                        image_tensor.size(2), image_tensor.size(3),
+                        image_tensor.size(1),image_tensor.size(2), image_tensor.size(3),
                         self.data_config.vae_image_downsample, 
                         max_num_patches_per_side=self.data_config.max_latent_size
                     )
                 )
-                T,C,H, W = image_tensor.shape
+                C,T,H, W = image_tensor.shape
                 h = H // self.data_config.vae_image_downsample
                 w = W // self.data_config.vae_image_downsample
-                t=(T-1)//8+1
-                sequence_status['vae_latent_shapes'].append((h, w))
+                t=(T-1)//4+1
+                sequence_status['vae_latent_shapes'].append((t,h, w))
 
                 num_img_tokens = t*w * h
                 sequence_status['packed_vae_token_indexes'].extend(range(curr, curr + num_img_tokens))
@@ -538,11 +578,12 @@ class PackedDataset(torch.utils.data.IterableDataset):
                         attn_modes.append("noise")
                     else:
                         attn_modes.append("full")
+                #关于special token的pos id，有待商榷
                 sequence_status['packed_position_ids'].append(curr_rope_id)
                 for idx in range(t):
-                    curr_rope_id=curr_rope_id+idx
+                    curr_rope_id=curr_rope_id+1
                     sequence_status['packed_position_ids'].extend([curr_rope_id]*(w*h))
-                sequence_status['packed_position_ids'].append(curr_rope_id)
+                sequence_status['packed_position_ids'].append(curr_rope_id+1)
                 if 'frame_delta' in item.keys():
                     curr_rope_id += item['frame_delta']
                 elif item['loss'] == 0:
@@ -717,7 +758,7 @@ if __name__=="__main__":
     from data.data_utils import add_special_tokens
     # import torch.distributed as dist
     # dist.init_process_group("nccl")
-    with open("./data/configs/blip3.yaml", "r") as stream:
+    with open("/mnt/data/mjc/bagel_video/data/configs/byte.yaml", "r") as stream:
         dataset_meta = yaml.safe_load(stream)
     dataset_config = DataConfig(grouped_datasets=dataset_meta)
 
@@ -729,7 +770,7 @@ if __name__=="__main__":
     dataset_config.text_cond_dropout_prob =0.1
     dataset_config.vae_cond_dropout_prob = 0.3
     dataset_config.vit_cond_dropout_prob = 0.3
-    tokenizer = Qwen2Tokenizer.from_pretrained("/mnt/localdisk/hongwei/BAGEL-7B-MoT")
+    tokenizer = Qwen2Tokenizer.from_pretrained("/mnt/data/checkpoints/BAGEL-7B-MoT/")
 
     tokenizer, new_token_ids, num_new_tokens = add_special_tokens(tokenizer)
     # import pdb
@@ -743,16 +784,27 @@ if __name__=="__main__":
         num_workers=4,
         expected_num_tokens=12768,
         max_num_tokens_per_sample=16384,
-        max_num_tokens=36864,
+        max_num_tokens=13000,
         max_buffer_size=50,
         prefer_buffer_before=16384,
         interpolate_pos=False,
         use_flex=True,
         data_status=None,
     )
-    iii=iter(train_dataset)
-    print(next(iii))
-    
+    from torch.utils.data import DataLoader
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=1, # batch size is 1 packed dataset
+        num_workers=2,
+        pin_memory=True,
+        collate_fn=collate_wrapper(),
+        drop_last=True,
+        prefetch_factor=2,
+    )
+    for i in train_loader:
+        print(i)
+        break
+
     # train_dataset.set_epoch(data_args.data_seed)
     # train_loader = DataLoader(
     #     train_dataset,

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: Apache-2.0
 export WANDB_API_KEY=0f9e4269eec620b5201843ea9fe23e73c8a14b66
 # replace the variables with your own
-export CUDA_VISIBLE_DEVICES=0,1,2,3
+#export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 num_nodes=1
 node_rank=0
 master_addr="localhost"
@@ -14,16 +14,17 @@ eval_config="./data/configs/eval.yaml"
 torchrun \
   --nnodes=$num_nodes \
   --node_rank=$node_rank \
-  --nproc_per_node=4 \
+  --nproc_per_node=8 \
   --master_addr=$master_addr \
   --master_port=$master_port \
   train/train_stage1.py \
   --total_steps 50000 \
   --warmup_steps 750 \
+  --save_every 10 \
   --lr_scheduler "cosine" \
   --wandb_name $train_stage \
   --train_stage $train_stage \
-  --num_shard 4 \
+  --num_shard 8 \
   --vae_change True \
   --dataset_config_file $data_config \
   --eval_config_file $eval_config \

@@ -1,0 +1,36 @@
+
+train_data: ['seed_i'] # 512px Train data path
+train_data_weights: [0.8] #video rate
+
+data:
+  params:
+    batch_size: 1 # the real batch size
+    image_batch_size: 1 # real image batch size
+    enable_bucket: True
+    dataset_collections: # list all available dataset
+      seed_i:
+        target: data.byte_data.SeedV1Dataset
+        path: "data/hdvg_data"
+        aspect_ratios:
+          "256p-1.25": [256, 320]
+          "256p-0.8": [320, 256]
+        ratio_strategy: closest
+        params:
+          sample_size: -1 # set to -1 to keep the original resolution
+          fps: 24
+          num_parallel_files: 2
+          video_frame_sampler:
+            type: 'adaptive_advanced'
+            strategies:
+              - stride: 2
+                stride_prob: 1.0
+                frame_lengths: [ 5 ]
+                frame_lengths_prob: 'harmonic'
+            clip: 'simple'
+          text_sampler:
+            type: 'frequency'
+            frequency:
+              recaption_7B_: 1.0
+              origin_title: 0.0
+      
+      
