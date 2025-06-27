@@ -1,4 +1,4 @@
 byte_data:
   dataset_names:
   - byte_data
-  weight: 0.2
+  weight: 4
