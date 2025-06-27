@@ -138,30 +138,6 @@ class SeedV1Dataset(ParquetDataset):
                     continue
                 results = {}
 
-                if self.use_offline_emb and "latent" not in sample:
-                    self.use_offline_emb = False
-                    self.mock_offline_emb = True
-                    print(
-                        "You are using MOCK offline_emb! Make sure it's your intention."
-                    )
-
-                # Return offline embedding if provided.
-                if self.use_offline_emb:
-                    results["latent"] = pickle.loads(sample["latent"]).cpu()
-                    text_emb_dict = pickle.loads(sample["text_emb"])
-                    with local_seed(seed):
-                        sampled_text_keys = self.text_sampler(
-                            text=text_emb_dict).keys
-                    results["text_emb"] = text_emb_dict[sampled_text_keys].cpu()
-                    results["text"] = (
-                        json.loads(sample["text"])[
-                            sampled_text_keys] if "text" in sample else ""
-                    )
-                    results["uttid"] = sample["uttid"]
-                    results["meta"] = json.loads(
-                        sample["meta"]) if "meta" in sample else dict()
-                    yield results
-                    continue
 
                 # Compute frame indices.
                 frame_raw = sample["image"]

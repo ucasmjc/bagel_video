@@ -1,19 +1,20 @@
-# Copyright 2025 Bytedance Ltd. and/or its affiliates.
-# SPDX-License-Identifier: Apache-2.0
-#export WANDB_API_KEY=0f9e4269eec620b5201843ea9fe23e73c8a14b66
-export swanlab=opAGVeUsjTN3PcuSFNif3
-# replace the variables with your own
-#export CUDA_VISIBLE_DEVICES=0,4,6,7
-export NCCL_DEBUG=INFO
-export NCCL_ASYNC_ERROR_HANDLING=1  # 关键！使通信错误抛出异常而非卡死
-export TORCH_DISTRIBUTED_DEBUG=DETAIL  # PyTorch分布式调试
+yaml_file="env_config.yaml"
+
+get_yaml_value() {
+    local key=$1
+    local value=$(awk -F': ' "/^$key: / {print \$2}" "$yaml_file")
+    echo "$value"
+}
+
+# 获取值
+model_path=$(get_yaml_value "bagel_path")
+
 
 num_nodes=1
 node_rank=0
 master_addr="localhost"
 master_port=26800
 #stage1 ckpt
-model_path=/mnt/data/checkpoints/BAGEL-7B-MoT/
 train_stage="t2v"
 ckpt_path=results/checkpoints/$train_stage
 torchrun \
@@ -43,12 +44,11 @@ torchrun \
   --gradient_accumulation_steps 1 \
   --lr_scheduler "cosine" \
   --lr 1e-4 \
-  --num_worker 1 \
-  --expected_num_tokens 1024 \
+  --num_worker 2 \
+  --expected_num_tokens 32768 \
   --max_latent_size 64 \
-  --max_num_tokens 1280 \
-  --max_num_tokens_per_sample 1024 \
-  --prefer_buffer_before 1024 \
+  --max_num_tokens 33280 \
+  --max_num_tokens_per_sample 16384 \
   --freeze_und  True \
   --freeze_vit True \
   --freeze_llm False \

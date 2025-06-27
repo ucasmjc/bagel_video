@@ -16,7 +16,8 @@ DATASET_REGISTRY = {
     "byte_data":CollectionDataset,
     "byte_frame":CollectionDataset_frame
 }
-
+from omegaconf import OmegaConf
+configs = OmegaConf.load("env_config.yaml")
 
 DATASET_INFO = {
     't2i_pretrain': {
@@ -72,7 +73,7 @@ DATASET_INFO = {
     },
     'byte_data':{
         'byte_data':{
-            "byte_meta_path":'/mnt/data/mjc/bagel_video/data/byte_data/config.yaml',
+            "byte_meta_path":configs["training_data_config"],
         }
     }
 }

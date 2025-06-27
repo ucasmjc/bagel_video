@@ -147,11 +147,9 @@ class Bagel(PreTrainedModel):
             packed_timesteps: 1-D float tensor, flow timesteps. 0 indicates use clean image.
             mse_loss_indexes: 1-D bool tensor, where to compute mse loss.
         """
-        print("0000000000003")
         packed_text_embedding = self.language_model.model.embed_tokens(packed_text_ids)
         packed_sequence = packed_text_embedding.new_zeros(size=(sequence_length, self.hidden_size))
         packed_sequence[packed_text_indexes] = packed_text_embedding
-        print("0000000000001")
         if nested_attention_masks is None:
             sparse_mask = create_sparse_mask(sample_lens, split_lens, attn_modes, packed_text_embedding.device)
             seqlen = sum(sample_lens)
@@ -162,7 +160,6 @@ class Bagel(PreTrainedModel):
             attention_mask = block_mask
         else:
             attention_mask = nested_attention_masks
-        print("000000000002")
         if self.config.visual_und:
             cu_seqlens = torch.nn.functional.pad(torch.cumsum(vit_token_seqlens, dim=0), (1, 0))
             cu_seqlens = cu_seqlens.to(torch.int32)
@@ -182,8 +179,8 @@ class Bagel(PreTrainedModel):
             p = self.latent_patch_size
             packed_latent = []
             for latent, (t,h, w) in zip(padded_latent, patchified_vae_latent_shapes):
-                latent = latent[:, :h * p, :w * p].reshape(self.latent_channel, h, p, w, p)
-                latent = torch.einsum("chpwq->hwpqc", latent).reshape(-1, p * p * self.latent_channel)
+                latent = latent[:, :t,:h * p, :w * p].reshape(self.latent_channel,t, h, p, w, p)
+                latent = torch.einsum("cthpwq->thwpqc", latent).reshape(-1, p * p * self.latent_channel)
                 packed_latent.append(latent)
             packed_latent_clean = torch.cat(packed_latent, dim=0)
 
@@ -193,6 +190,7 @@ class Bagel(PreTrainedModel):
             packed_latent = (1 - packed_timesteps[:, None]) * packed_latent_clean + packed_timesteps[:, None] * noise
             packed_timestep_embeds = self.time_embedder(packed_timesteps)
             latent_token_pos_emb = self.latent_pos_embed(packed_latent_position_ids)
+
             packed_latent = self.vae2llm(packed_latent) + packed_timestep_embeds + latent_token_pos_emb
             packed_sequence[packed_vae_token_indexes] = packed_latent
 
@@ -441,7 +439,7 @@ class Bagel(PreTrainedModel):
                 self.latent_downsample, 
                 max_num_patches_per_side=self.max_latent_size
             )
-            print(vae_posiiton_ids.shape,self.max_latent_size,image_tensor.size)
+           # print(vae_posiiton_ids.shape,self.max_latent_size,image_tensor.size)
             packed_vae_position_ids.append(vae_posiiton_ids)
             H, W = image_tensor.shape[1:]
             h = H // self.latent_downsample

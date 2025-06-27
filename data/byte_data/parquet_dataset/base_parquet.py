@@ -10,6 +10,7 @@ from .parquet_utils import (
     get_portion_for_worker_only,
     get_random_for_rank_and_worker,
     get_portion_for_rank_and_worker,
+    get_worker_id
 )
 
 def hack_s_data(filepath):
@@ -84,7 +85,12 @@ class ParquetDataset(IterableDataset):
             filepaths = map(listdir_with_metafile, filepaths)
             filepaths = chain(*filepaths)
         filepaths = filter(lambda path: path.endswith(".parquet"), filepaths)
+        
         filepaths = [hack_s_data(path) for path in filepaths]
+        # if len(filepaths)<10:
+        #     filepaths=filepaths*70
+        # else:
+        #     filepaths=filepaths
         filepaths = sorted(filepaths)
         assert len(filepaths) > 0
 
@@ -130,6 +136,7 @@ class ParquetDataset(IterableDataset):
         if self.partition == "file":
             filereaders = get_portion_for_rank_and_worker(
                 filereaders, self.force_partition)
+       # print(get_worker_id(),len(filereaders),len(self.filereaders))
 
         while True:
             # Initialize filereaders iterators.
@@ -203,6 +210,7 @@ class ParquetFileReader:
 
     def __len__(self):
         fs = get_filesystem(self.path)
+
         with ParquetFile(self.path, filesystem=fs) as file:
             return file.metadata.num_rows
 
@@ -212,7 +220,9 @@ class ParquetFileReader:
             # return and make the iter empty
             print(f"parallel loading warning: {self.path} or {self.plugin_caption_path} not exists, return empty iter")
             yield "invalid parquet file!"
+        
         try:
+            
             with ParquetFile(self.path, filesystem=fs) as file, \
                     ParquetFile(self.plugin_caption_path, filesystem=fs) as plugin_caption, \
                         ParquetFile(self.dump_path, filesystem=fs) as dump_file:
@@ -261,11 +271,12 @@ class ParquetFileReader:
 
     def __iter_normal(self, epoch):
         fs = get_filesystem(self.path)
+
         with ParquetFile(self.path, filesystem=fs) as file:
             # List all groups.
             groups = list(range(file.num_row_groups))
 
-            # Partition groups if needed.
+            # Partition groups if needed. "file"
             if self.partition == "group":
                 groups = get_portion_for_rank_and_worker(
                     groups, self.force_partition)
@@ -286,6 +297,7 @@ class ParquetFileReader:
                     yield sample.to_pandas().iloc[0].to_dict()
 
     def __iter__(self, epoch=0):
+        
         if self.plugin_caption_path != "":
             return self.__iter_parallel(epoch)
         else:

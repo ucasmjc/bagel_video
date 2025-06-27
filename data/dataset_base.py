@@ -250,7 +250,7 @@ class PackedDataset(torch.utils.data.IterableDataset):
             image_sizes = [item.shape for item in image_tensors]
 
             max_image_size = [max(item) for item in list(zip(*image_sizes))]
-            padded_images = torch.zeros(size=(len(image_tensors), *max_image_size)) #bs*n*c*h*w
+            padded_images = torch.zeros(size=(len(image_tensors), *max_image_size)) #bcthw
             for i, image_tensor in enumerate(image_tensors):
                 padded_images[i,:image_tensor.shape[0] ,:, :image_tensor.shape[2], :image_tensor.shape[3]] = image_tensor
 
@@ -468,20 +468,21 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 sequence_status['packed_text_indexes'].append(curr)
                 curr += 1
                 curr_split_len += 1
+                C,T,H, W = image_tensor.shape
+                h = H // self.data_config.vae_image_downsample
+                w = W // self.data_config.vae_image_downsample
+                t=(T-1)//4+1
 
                 # preprocess image
                 sequence_status['vae_image_tensors'].append(image_tensor)
                 sequence_status['packed_latent_position_ids'].append(
                     self.get_flattened_position_ids(
-                        image_tensor.size(1),image_tensor.size(2), image_tensor.size(3),
+                        t,image_tensor.size(2), image_tensor.size(3),
                         self.data_config.vae_image_downsample, 
                         max_num_patches_per_side=self.data_config.max_latent_size
                     )
                 )
-                C,T,H, W = image_tensor.shape
-                h = H // self.data_config.vae_image_downsample
-                w = W // self.data_config.vae_image_downsample
-                t=(T-1)//4+1
+                
                 sequence_status['vae_latent_shapes'].append((t,h, w))
 
                 num_img_tokens = t*w * h
@@ -532,20 +533,20 @@ class PackedDataset(torch.utils.data.IterableDataset):
                 sequence_status['packed_text_indexes'].append(curr)
                 curr += 1
                 curr_split_len += 1
-
-                # preprocess image
-                sequence_status['vae_image_tensors'].append(image_tensor)
-                sequence_status['packed_latent_position_ids'].append(
-                    self.get_flattened_position_ids(
-                        image_tensor.size(1),image_tensor.size(2), image_tensor.size(3),
-                        self.data_config.vae_image_downsample, 
-                        max_num_patches_per_side=self.data_config.max_latent_size
-                    )
-                )
                 C,T,H, W = image_tensor.shape
                 h = H // self.data_config.vae_image_downsample
                 w = W // self.data_config.vae_image_downsample
                 t=(T-1)//4+1
+                # preprocess image
+                sequence_status['vae_image_tensors'].append(image_tensor)
+                sequence_status['packed_latent_position_ids'].append(
+                    self.get_flattened_position_ids(
+                        t,image_tensor.size(2), image_tensor.size(3),
+                        self.data_config.vae_image_downsample, 
+                        max_num_patches_per_side=self.data_config.max_latent_size
+                    )
+                )
+
                 sequence_status['vae_latent_shapes'].append((t,h, w))
 
                 num_img_tokens = t*w * h
@@ -758,7 +759,9 @@ if __name__=="__main__":
     from data.data_utils import add_special_tokens
     # import torch.distributed as dist
     # dist.init_process_group("nccl")
-    with open("/mnt/data/mjc/bagel_video/data/configs/byte.yaml", "r") as stream:
+    from omegaconf import OmegaConf
+    configs = OmegaConf.load("env_config.yaml")
+    with open(configs["training_data_config"], "r") as stream:
         dataset_meta = yaml.safe_load(stream)
     dataset_config = DataConfig(grouped_datasets=dataset_meta)
 
@@ -770,7 +773,8 @@ if __name__=="__main__":
     dataset_config.text_cond_dropout_prob =0.1
     dataset_config.vae_cond_dropout_prob = 0.3
     dataset_config.vit_cond_dropout_prob = 0.3
-    tokenizer = Qwen2Tokenizer.from_pretrained("/mnt/data/checkpoints/BAGEL-7B-MoT/")
+    
+    tokenizer = Qwen2Tokenizer.from_pretrained(config["bagel_path"])
 
     tokenizer, new_token_ids, num_new_tokens = add_special_tokens(tokenizer)
     # import pdb
@@ -781,7 +785,7 @@ if __name__=="__main__":
         special_tokens=new_token_ids,
         local_rank=0,
         world_size=1,
-        num_workers=4,
+        num_workers=2,
         expected_num_tokens=12768,
         max_num_tokens_per_sample=16384,
         max_num_tokens=13000,
@@ -791,6 +795,9 @@ if __name__=="__main__":
         use_flex=True,
         data_status=None,
     )
+    # aaa=iter(train_dataset)
+    # for idx in range(3):
+    #     next(aaa)
     from torch.utils.data import DataLoader
     train_loader = DataLoader(
         train_dataset,

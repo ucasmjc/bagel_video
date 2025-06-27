@@ -157,7 +157,6 @@ def main():
             # 设置项目名
             project=training_args.wandb_project,
             experiment_name=training_args.wandb_name,
-            mode="offline"
             
             # 设置超参数
         )
@@ -330,7 +329,7 @@ def main():
     #         ignored_modules.add(module)
     fsdp_model = fsdp_wrapper(model, fsdp_config)
     if dist.get_rank() == 0:
-        print(model)
+        logger.info(model)
     apply_activation_checkpointing(
         fsdp_model, 
         checkpoint_wrapper_fn=functools.partial(
@@ -398,7 +397,7 @@ def main():
         use_flex=training_args.use_flex,
         data_status=data_status,
     )
-    train_dataset.set_epoch(data_args.data_seed)
+    #train_dataset.set_epoch(data_args.data_seed)
     train_loader = DataLoader(
         train_dataset,
         batch_size=1, # batch size is 1 packed dataset
@@ -428,9 +427,10 @@ def main():
             if training_args.visual_gen:
                 with torch.no_grad():
                     #b*c*h*w
-                    data['padded_latent'] = vae_model.encode(data.pop('padded_images').permute(0,2,1,3,4))#btchw->bcthw
+                    data['padded_latent'] = vae_model.encode(data.pop('padded_images'))#bcthw->btchw
+                    #bcthw
             if outer_curr_step==0:
-                print(data['padded_latent'].shape,data['packed_timesteps'].mean(),data['padded_latent'].mean(),data["packed_text_ids"].float().mean())
+                logger.info(data['padded_latent'].shape,data['packed_timesteps'].mean(),data['padded_latent'].mean(),data["packed_text_ids"].float().mean())
             loss_dict = fsdp_model(**data)
 
         loss = 0
@@ -482,7 +482,6 @@ def main():
             # )
 
         # Log loss values:
-        print(cuur_step)
         if curr_step % training_args.log_every == 0:
             total_samples = torch.tensor(len(data['sample_lens']), device=device)
             dist.all_reduce(total_samples, op=dist.ReduceOp.SUM)

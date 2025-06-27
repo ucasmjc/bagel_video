@@ -431,7 +431,9 @@ class VideoVAE(nn.Module):
     def __init__(self):
         super().__init__()
         from modeling.vae import WanVAE
-        self.vae = WanVAE(vae_pth="/mnt/data/mjc/Index-anisora/Wan2.1_VAE.pth")
+        from omegaconf import OmegaConf
+        configs = OmegaConf.load("env_config.yaml")
+        self.vae = WanVAE(vae_pth=configs["wan_ave_path"])
         self.ae_params = AutoEncoderParams(
                 resolution=256,
                 in_channels=3,
@@ -446,7 +448,7 @@ class VideoVAE(nn.Module):
         )
 
     def encode(self, x: Tensor) -> Tensor:
-        z=torch.stack(self.vae.encode(x),dim=0).squeeze(2)
+        z=torch.stack(self.vae.encode(x),dim=0)
         
         return z
 

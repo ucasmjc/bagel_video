@@ -25,8 +25,8 @@ def collate_fn_map(samples):
     else:
         return default_collate(samples)
 
-
-class CollectionDataset(DistributedIterableDataset):
+from torch.utils.data import IterableDataset
+class CollectionDataset(IterableDataset):
     def __init__(
         self,
         train_data: list[str],
@@ -41,7 +41,7 @@ class CollectionDataset(DistributedIterableDataset):
         data_cache_prefix={'AIPVideoDataset': 'aip_dataset_cache'},
         **kwargs
     ):
-        super().__init__(kwargs.get("dataset_name",None),kwargs.get("local_rank",0),kwargs.get("world_size",8),kwargs.get("num_workers",1) )
+        #super().__init__(kwargs.get("dataset_name",None),kwargs.get("local_rank",0),kwargs.get("world_size",8),kwargs.get("num_workers",1) )
         # prepare for bucketings
         self.data_status = kwargs.get("data_status",None)
         self.tokenizer=kwargs.get("tokenizer",None)
@@ -97,26 +97,26 @@ class CollectionDataset(DistributedIterableDataset):
         self.length = sum([len(dataset) for dataset in self.dataset_list])
         self.dataset_iter_list = [iter(dataset) for dataset in self.dataset_list]
         #self.data_paths=self.dataset_list
-        if len(self.dataset_iter_list)<10:
-            self.data_paths=self.dataset_iter_list*70
-        else:
-            self.data_paths=self.dataset_iter_list
-        self.set_epoch()
-        # import pdb
-        # pdb.set_trace()
+        # if len(self.dataset_iter_list)<10:
+        #     self.data_paths=self.dataset_iter_list*70
+        # else:
+        #     self.data_paths=self.dataset_iter_list
+    #     self.set_epoch()
+    #     # import pdb
+    #     # pdb.set_trace()
 
-    def set_epoch(self, seed=42):
-        if self.data_paths is None:
-            return
-        data_paths=self.data_paths
-        self.rng.seed(seed)
-        self.rng.shuffle(data_paths)
+    # def set_epoch(self, seed=42):
+    #     if self.data_paths is None:
+    #         return
+    #     data_paths=self.data_paths
+    #     self.rng.seed(seed)
+    #     self.rng.shuffle(data_paths)
 
-        num_files_per_rank = len(data_paths) // self.world_size
-        local_start = self.local_rank * num_files_per_rank
-        local_end = (self.local_rank + 1) * num_files_per_rank
-        self.num_files_per_rank = num_files_per_rank
-        self.data_paths_per_rank = data_paths[local_start:local_end]
+    #     num_files_per_rank = len(data_paths) // self.world_size
+    #     local_start = self.local_rank * num_files_per_rank
+    #     local_end = (self.local_rank + 1) * num_files_per_rank
+    #     self.num_files_per_rank = num_files_per_rank
+    #     self.data_paths_per_rank = data_paths[local_start:local_end]
     def add_aspect_ratios(self, aspect_ratios):
         for key in aspect_ratios.keys():
             self.buckets[key] = []
@@ -216,17 +216,17 @@ class CollectionDataset(DistributedIterableDataset):
         return batch
 
     def __iter__(self):
-        data_paths_per_worker, worker_id = self.get_data_paths_per_worker()
-        if self.data_status is not None:
-            parquet_start_id = self.data_status[worker_id][0]
-            #row_start_id = self.data_status[worker_id][2] + 1
-        else:
-            parquet_start_id = 0
-            #row_start_id = 0
-        print(
-            f"rank-{self.local_rank} worker-{worker_id} dataset-{self.dataset_name}: "
-            f"resuming data at parquet#{parquet_start_id}, row# 0"
-        )
+        # data_paths_per_worker, worker_id = self.get_data_paths_per_worker()
+        # if self.data_status is not None:
+        #     parquet_start_id = self.data_status[worker_id][0]
+        #     #row_start_id = self.data_status[worker_id][2] + 1
+        # else:
+        #     parquet_start_id = 0
+        #     #row_start_id = 0
+        # print(
+        #     f"rank-{self.local_rank} worker-{worker_id} dataset-{self.dataset_name}: "
+        #     f"resuming data at parquet#{parquet_start_id}, row# 0"
+        # )
         def __native__iter():
             
             while True:
@@ -236,73 +236,55 @@ class CollectionDataset(DistributedIterableDataset):
                 yield next(dataset)
 
         def __bucket__iter():
-            data_paths_per_worker_ = data_paths_per_worker[parquet_start_id:]
+            #data_paths_per_worker_ = data_paths_per_worker[parquet_start_id:]
             while True:
+                idx=random.choice(range(len(self.dataset_iter_list)))
+                single_data=self.dataset_iter_list[idx]
+                item = next(single_data)
+                #dict_keys(['mp4', 'txt', 'fps', 'num_frames']), 17*3*720*1280;
+                batch_data = self.put_to_bucket(item, "seed_i")
                 
-                for idx, single_data in enumerate(data_paths_per_worker_, start=parquet_start_id):
-                    #single_data=single_data[row_start_id:]
-                    #for row_id in range(row_start_id,len(single_data)):
-                        #import pdb;pdb.set_trace()
-                        # dataset_idx = random.choices(
-                        #     list(range(len(self.dataset_list))), weights=self.train_data_weights)[0]
-                        # dataset = self.dataset_iter_list[dataset_idx]
-                        # dataset_name = self.dataset_names[dataset_idx]
-                        
-                        # if dataset_name in self.image_dataset_names:
-                        #     replicate_times = max(int(self.image_batch_size / self.batch_size), 1)
-                        #     batch_data_list = []
-                        #     while replicate_times > 0:
-                        #         item = next(dataset)
-                        #         batch_data = self.put_to_bucket(item, dataset_name)
-                        #         if batch_data is not None:
-                        #             batch_data_list.append(batch_data)
-                        #         replicate_times -= 1
-                        #     for batch_data in batch_data_list:
-                        #         yield batch_data
-                        # else:
-                    item = next(single_data)
-                    #dict_keys(['mp4', 'txt', 'fps', 'num_frames']), 17*3*720*1280;
-                    batch_data = self.put_to_bucket(item, "seed_i")
-                    
-                    if batch_data is not None:
-                        data_i=batch_data[0]
-                        frames=data_i["videos"]
-                        time,channel,height, width = frames.shape
-                        frames.permute(1, 0, 2, 3)
-                        num_tokens = ((time-1)/4+1)*width * height // 16 ** 2 #vae stride
-                        caption_token = self.tokenizer.encode(data_i["prompts"])
-                        sequence_plan, text_ids_list = [], []
-                        text_ids = caption_token
-                        num_tokens += len(caption_token)
-                        text_ids_list.append(text_ids)
-                        sequence_plan.append({
-                            'type': 'text',
-                            'enable_cfg': 1,
-                            'loss': 0,
-                            'special_token_loss': 0,
-                            'special_token_label': None,
-                        })
-                    
-                        sequence_plan.append({
-                            'type': 'vae_video',
-                            'enable_cfg': 0,
-                            'loss': 1,
-                            'special_token_loss': 0,
-                            'special_token_label': None,
-                        })
+                if batch_data is not None:
+                    data_i=batch_data[0]
+                    frames=data_i["videos"]
+                    time,channel,height, width = frames.shape
+                    frames=frames.permute(1, 0, 2, 3)
+                    num_tokens = ((time-1)/4+1)*width * height // 16 ** 2 #vae stride
+                    caption_token = self.tokenizer.encode(data_i["prompts"])
+                    sequence_plan, text_ids_list = [], []
+                    text_ids = caption_token
+                    num_tokens += len(caption_token)
+                    text_ids_list.append(text_ids)
+                    sequence_plan.append({
+                        'type': 'text',
+                        'enable_cfg': 1,
+                        'loss': 0,
+                        'special_token_loss': 0,
+                        'special_token_label': None,
+                    })
+                
+                    sequence_plan.append({
+                        'type': 'vae_video',
+                        'enable_cfg': 0,
+                        'loss': 1,
+                        'special_token_loss': 0,
+                        'special_token_label': None,
+                    })
 
-                        sample = dict(
-                            image_tensor_list=[frames], #3*512*512
-                            text_ids_list=text_ids_list,
-                            num_tokens=num_tokens,
-                            sequence_plan=sequence_plan,
-                            data_indexes={
-                                "data_indexes": [idx,0,0],
-                                "worker_id": worker_id,
-                                "dataset_name": self.dataset_name,
-                            }
-                        )
-                        yield sample
+                    sample = dict(
+                        image_tensor_list=[frames], #3*512*512
+                        text_ids_list=text_ids_list,
+                        num_tokens=num_tokens,
+                        sequence_plan=sequence_plan,
+                        data_indexes={
+                            "data_indexes": [idx,0,0],
+                            # "worker_id": worker_id,
+                            # "dataset_name": self.dataset_name,
+                             "worker_id": 0,
+                            "dataset_name": 0,
+                        }
+                    )
+                    yield sample
         
         if self.enable_bucket:
             return __bucket__iter()
@@ -343,7 +325,7 @@ class CollectionDataset(DistributedIterableDataset):
     def create_dataset_function(cls, data, data_weights, **kwargs):
         return cls(data, data_weights, **kwargs)
 
-class CollectionDataset_frame(DistributedIterableDataset):
+class CollectionDataset_frame(IterableDataset):
     def __init__(
         self,
         train_data: list[str],
@@ -358,7 +340,7 @@ class CollectionDataset_frame(DistributedIterableDataset):
         data_cache_prefix={'AIPVideoDataset': 'aip_dataset_cache'},
         **kwargs
     ):
-        super().__init__(kwargs.get("dataset_name",None),kwargs.get("local_rank",0),kwargs.get("world_size",8),kwargs.get("num_workers",1) )
+        #super().__init__(kwargs.get("dataset_name",None),kwargs.get("local_rank",0),kwargs.get("world_size",8),kwargs.get("num_workers",1) )
         # prepare for bucketings
         self.data_status = kwargs.get("data_status",None)
         self.tokenizer=kwargs.get("tokenizer",None)
@@ -395,44 +377,36 @@ class CollectionDataset_frame(DistributedIterableDataset):
             module, cls = self.dataset_config['target'].rsplit(".", 1)
             data_class = getattr(
                 importlib.import_module(module, package=None), cls)
-            if cls == 'T2IHDFSDataset':
-                self.image_dataset_names.append(data_name)
 
-            if cls in data_cache_prefix:
-                data_cache = os.path.join(local_cache, data_cache_prefix[cls])
-                os.makedirs(data_cache, exist_ok=True)
-                local_cache_prefix = os.path.join(data_cache, data_name)
-                self.clean_cache(local_cache_prefix)
-                self.dataset_config['params']['local_cache_prefix'] = local_cache_prefix
-                self.local_cache_prefix_list.append(local_cache_prefix)
-            else:
-                self.local_cache_prefix_list.append('')
             dataset = data_class.create_dataset_function(
                 self.dataset_config['path'], None, **self.dataset_config['params'])
-            if cls == 'AIPVideoDataset':
-                self.init_state_dict[data_name] = dataset.state_dict
             self.dataset_list.append(dataset)
             self.dataset_names.append(data_name)
+
         self.length = sum([len(dataset) for dataset in self.dataset_list])
         self.dataset_iter_list = [iter(dataset) for dataset in self.dataset_list]
         #self.data_paths=self.dataset_list
-        self.data_paths=self.dataset_iter_list
-        self.set_epoch()
-        # import pdb
-        # pdb.set_trace()
+    #     # if len(self.dataset_iter_list)<10:
+    #     #     self.data_paths=self.dataset_iter_list*70
+    #     # else:
+    #     #     self.data_paths=self.dataset_iter_list
+    #     self.data_paths=self.dataset_iter_list
+    #     self.set_epoch()
+    #     # import pdb
+    #     # pdb.set_trace()
 
-    def set_epoch(self, seed=42):
-        if self.data_paths is None:
-            return
-        data_paths=self.data_paths
-        self.rng.seed(seed)
-        self.rng.shuffle(data_paths)
+    # def set_epoch(self, seed=42):
+    #     if self.data_paths is None:
+    #         return
+    #     data_paths=self.data_paths
+    #     self.rng.seed(seed)
+    #     self.rng.shuffle(data_paths)
 
-        num_files_per_rank = len(data_paths) // self.world_size
-        local_start = self.local_rank * num_files_per_rank
-        local_end = (self.local_rank + 1) * num_files_per_rank
-        self.num_files_per_rank = num_files_per_rank
-        self.data_paths_per_rank = data_paths[local_start:local_end]
+    #     num_files_per_rank = len(data_paths) // self.world_size
+    #     local_start = self.local_rank * num_files_per_rank
+    #     local_end = (self.local_rank + 1) * num_files_per_rank
+    #     self.num_files_per_rank = num_files_per_rank
+    #     self.data_paths_per_rank = data_paths[local_start:local_end]
     def add_aspect_ratios(self, aspect_ratios):
         for key in aspect_ratios.keys():
             self.buckets[key] = []
@@ -532,17 +506,17 @@ class CollectionDataset_frame(DistributedIterableDataset):
         return batch
 
     def __iter__(self):
-        data_paths_per_worker, worker_id = self.get_data_paths_per_worker()
-        if self.data_status is not None:
-            parquet_start_id = self.data_status[worker_id][0]
-            #row_start_id = self.data_status[worker_id][2] + 1
-        else:
-            parquet_start_id = 0
-            #row_start_id = 0
-        print(
-            f"rank-{self.local_rank} worker-{worker_id} dataset-{self.dataset_name}: "
-            f"resuming data at parquet#{parquet_start_id}, row# 0"
-        )
+        # data_paths_per_worker, worker_id = self.get_data_paths_per_worker()
+        # if self.data_status is not None:
+        #     parquet_start_id = self.data_status[worker_id][0]
+        #     #row_start_id = self.data_status[worker_id][2] + 1
+        # else:
+        #     parquet_start_id = 0
+        #     #row_start_id = 0
+        # print(
+        #     f"rank-{self.local_rank} worker-{worker_id} dataset-{self.dataset_name}: "
+        #     f"resuming data at parquet#{parquet_start_id}, row# 0"
+        # )
         def __native__iter():
             
             while True:
@@ -552,53 +526,52 @@ class CollectionDataset_frame(DistributedIterableDataset):
                 yield next(dataset)
 
         def __bucket__iter():
-            data_paths_per_worker_ = data_paths_per_worker[parquet_start_id:]
+            #data_paths_per_worker_ = data_paths_per_worker[parquet_start_id:]
             while True:
+                idx=random.choice(range(len(self.dataset_iter_list)))
+                single_data=self.dataset_iter_list[idx]
+                item = next(single_data)
+                #dict_keys(['mp4', 'txt', 'fps', 'num_frames']), 17*3*720*1280;
+                batch_data = self.put_to_bucket(item, self.dataset_names[idx])
+                if batch_data is not None:
+                    data_i=batch_data[0]
+                    frames=data_i["videos"]
+                    time,channel,height, width = frames.shape
+                    frames=frames.permute(1, 0, 2, 3)
+                    num_tokens = ((time-1)/4+1)*width * height // 16 ** 2 #vae stride
+                    caption_token = self.tokenizer.encode(data_i["prompts"])
+                    sequence_plan, text_ids_list = [], []
+                    text_ids = caption_token
+                    num_tokens += len(caption_token)
+                    text_ids_list.append(text_ids)
+                    sequence_plan.append({
+                        'type': 'text',
+                        'enable_cfg': 1,
+                        'loss': 0,
+                        'special_token_loss': 0,
+                        'special_token_label': None,
+                    })
                 
-                for idx, single_data in enumerate(data_paths_per_worker_, start=parquet_start_id):
-                    item = next(single_data)
-                    #dict_keys(['mp4', 'txt', 'fps', 'num_frames']), 17*3*720*1280;
-                    batch_data = self.put_to_bucket(item, "seed_i")
-                    
-                    if batch_data is not None:
-                        data_i=batch_data[0]
-                        frames=data_i["videos"]
-                        time,channel,height, width = frames.shape
-                        frames=frames.permute(1, 0, 2, 3)
-                        num_tokens = ((time-1)/4+1)*width * height // 16 ** 2 #vae stride
-                        caption_token = self.tokenizer.encode(data_i["prompts"])
-                        sequence_plan, text_ids_list = [], []
-                        text_ids = caption_token
-                        num_tokens += len(caption_token)
-                        text_ids_list.append(text_ids)
-                        sequence_plan.append({
-                            'type': 'text',
-                            'enable_cfg': 1,
-                            'loss': 0,
-                            'special_token_loss': 0,
-                            'special_token_label': None,
-                        })
-                    
-                        sequence_plan.append({
-                            'type': 'vae_image',
-                            'enable_cfg': 0,
-                            'loss': 1,
-                            'special_token_loss': 0,
-                            'special_token_label': None,
-                        })
+                    sequence_plan.append({
+                        'type': 'vae_image',
+                        'enable_cfg': 0,
+                        'loss': 1,
+                        'special_token_loss': 0,
+                        'special_token_label': None,
+                    })
 
-                        sample = dict(
-                            image_tensor_list=[frames], #3*512*512
-                            text_ids_list=text_ids_list,
-                            num_tokens=num_tokens,
-                            sequence_plan=sequence_plan,
-                            data_indexes={
-                                "data_indexes": [idx,0,0],
-                                "worker_id": worker_id,
-                                "dataset_name": self.dataset_name,
-                            }
-                        )
-                        yield sample
+                    sample = dict(
+                        image_tensor_list=[frames], #3*512*512
+                        text_ids_list=text_ids_list,
+                        num_tokens=num_tokens,
+                        sequence_plan=sequence_plan,
+                        data_indexes={
+                            "data_indexes": [idx,0,0],
+                            "worker_id": 0,
+                            "dataset_name":"btye",
+                        }
+                    )
+                    yield sample
         
         if self.enable_bucket:
             return __bucket__iter()
